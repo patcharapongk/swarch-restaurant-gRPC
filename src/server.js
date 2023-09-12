@@ -34,6 +34,9 @@ dotenv.config({ path: "../config.env" });
 const server_URL = process.env.SERVER_URL || "localhost";
 const port = process.env.PORT || 50051;
 
-server.bind(`${server_URL}:${port}`, grpc.ServerCredentials.createInsecure());
+server.bindAsync(
+  `${server_URL}:${port}`,
+  grpc.ServerCredentials.createInsecure()
+);
 console.log(`Server running at ${server_URL}:${port}`);
 server.start();
