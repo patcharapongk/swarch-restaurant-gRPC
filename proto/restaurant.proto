@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service RestaurantService {
+    rpc GetMenus(void) returns (stream MenuItem);
+    rpc GetMenu(MenuId) returns (MenuItem);
+    rpc CreateMenu(MenuItem) returns (MenuItem);
+    rpc UpdateMenu(MenuItem) returns (MenuItem);
+    rpc DeleteMenu(MenuId) returns ();
+}
+
+message void {}
+
+message MenuId {
+    string id = 1; 
+}
+
+message MenuItem {
+    string id = 1;
+    string name = 2;
+    double price = 3;
+}
