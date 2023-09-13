@@ -13,6 +13,8 @@ async function GetMenus(call, callback) {
 }
 
 async function GetMenu(call, callback) {
+  console.log("GetMenu callback running");
+  console.log("call: ", call);
   const menuId = call.request.id;
   if (!menuId) {
     return callback({
@@ -29,7 +31,13 @@ async function GetMenu(call, callback) {
         details: "Menu not found",
       });
     }
-    callback(null, { menu: menu });
+    console.log("menu: ", menu._id.toString());
+    const menuObject = {
+      id: menu._id.toString(),
+      name: menu.name,
+      price: menu.price,
+    };
+    callback(null, menuObject);
   } catch (err) {
     callback({
       code: grpc.status.INTERNAL,

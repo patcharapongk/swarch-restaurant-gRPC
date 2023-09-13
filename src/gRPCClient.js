@@ -24,7 +24,7 @@ const client = new protoDescriptor.RestaurantService(
   grpc.credentials.createInsecure()
 );
 console.log(
-  "\n----------------\ngRPC Client running at " +
+  "\n----------------\ngRPC Client connected to " +
     process.env.GRPC_CLIENT_URL +
     ":" +
     port +

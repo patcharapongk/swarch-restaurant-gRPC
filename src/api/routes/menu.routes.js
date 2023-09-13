@@ -29,7 +29,21 @@ menuRouter.get("/", (req, res) => {
 });
 
 // 2. GetMenu - Get a menu by ID
-menuRouter.get("/:id", (req, res) => {});
+menuRouter.get("/:id", (req, res) => {
+  function callback(err, data) {
+    console.log("get '/:id' callback running");
+    console.log("req.params: ", req.params);
+    console.log("req.params.id: ", req.params.id);
+    if (err) {
+      res.status(err.code).send(err.details);
+    } else {
+      console.log(data);
+      res.json(data);
+    }
+  }
+  // call the RPC method
+  client.GetMenu({ id: req.params.id.trim() }, callback);
+});
 menuRouter.post("/", (req, res) => {});
 menuRouter.put("/:id", (req, res) => {});
 menuRouter.delete("/:id", (req, res) => {});
