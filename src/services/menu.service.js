@@ -81,7 +81,8 @@ async function CreateMenu(call, callback) {
 async function UpdateMenu(call, callback) {
   console.log("UpdateMenu callback running");
   const newmenu = call.request;
-  const menuId = newmenu.id;
+  console.log("newmenu: ", newmenu);
+  const menuId = call.request.id;
   if (!menuId) {
     return callback({
       code: grpc.status.INVALID_ARGUMENT,
@@ -101,6 +102,14 @@ async function UpdateMenu(call, callback) {
     const doc = await Menu.findOneAndUpdate(filter, update, {
       new: true,
     });
+    if (!doc) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Menu not found",
+      });
+    }
+    console.log("doc: ", doc);
+    callback(null, doc);
   } catch (err) {
     callback({
       code: grpc.status.INTERNAL,

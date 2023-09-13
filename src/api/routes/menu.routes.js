@@ -72,7 +72,7 @@ menuRouter.put("/:id", (req, res) => {
       res.json(data);
     }
   }
-  client.UpdateMenu(req.body, callback);
+  client.UpdateMenu({ id: req.params.id, ...req.body }, callback);
 });
 menuRouter.delete("/:id", (req, res) => {
   function callback(err, data) {
