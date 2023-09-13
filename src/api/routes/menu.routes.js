@@ -2,6 +2,7 @@ const express = require("express");
 const menuRouter = express.Router();
 
 const client = require("../../gRPCClient.js");
+const gRPCtoHTTPstatus = require("../../utils/gRPCtoHTTPstatus");
 
 /* menuRouter will have 5 endpoints, corresponding to the gRPC services
 service RestaurantService {
@@ -19,7 +20,8 @@ menuRouter.get("/", (req, res) => {
   function callback(err, data) {
     console.log("get '/' callback running");
     if (err) {
-      res.status(err.code).send(err.details);
+      let httpStatus = gRPCtoHTTPstatus(err.code);
+      res.status(httpStatus).send(err.details);
     } else {
       res.json(data);
     }
@@ -35,7 +37,8 @@ menuRouter.get("/:id", (req, res) => {
     console.log("req.params: ", req.params);
     console.log("req.params.id: ", req.params.id);
     if (err) {
-      res.status(err.code).send(err.details);
+      let httpStatus = gRPCtoHTTPstatus(err.code);
+      res.status(httpStatus).send(err.details);
     } else {
       console.log(data);
       res.json(data);
@@ -44,7 +47,21 @@ menuRouter.get("/:id", (req, res) => {
   // call the RPC method
   client.GetMenu({ id: req.params.id.trim() }, callback);
 });
-menuRouter.post("/", (req, res) => {});
+
+// 3. CreateMenu - Create a new menu
+menuRouter.post("/", (req, res) => {
+  function callback(err, data) {
+    console.log("post '/' callback running");
+    if (err) {
+      let httpStatus = gRPCtoHTTPstatus(err.code);
+      res.status(httpStatus).send(err.details);
+    } else {
+      res.json(data);
+    }
+  }
+  // call the RPC method
+  client.CreateMenu(req.body, callback);
+});
 menuRouter.put("/:id", (req, res) => {});
 menuRouter.delete("/:id", (req, res) => {});
 
