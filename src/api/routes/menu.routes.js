@@ -62,7 +62,29 @@ menuRouter.post("/", (req, res) => {
   // call the RPC method
   client.CreateMenu(req.body, callback);
 });
-menuRouter.put("/:id", (req, res) => {});
-menuRouter.delete("/:id", (req, res) => {});
+menuRouter.put("/:id", (req, res) => {
+  function callback(err, data) {
+    console.log("put '/:id' callback running");
+    if (err) {
+      let httpStatus = gRPCtoHTTPstatus(err.code);
+      res.status(httpStatus).send(err.details);
+    } else {
+      res.json(data);
+    }
+  }
+  client.UpdateMenu(req.body, callback);
+});
+menuRouter.delete("/:id", (req, res) => {
+  function callback(err, data) {
+    console.log("delete '/:id' callback running");
+    if (err) {
+      let httpStatus = gRPCtoHTTPstatus(err.code);
+      res.status(httpStatus).send(err.details);
+    } else {
+      res.json(data);
+    }
+  }
+  client.DeleteMenu({ id: req.params.id.trim() }, callback);
+});
 
 module.exports = menuRouter;

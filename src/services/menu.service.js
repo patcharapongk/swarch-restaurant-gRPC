@@ -78,11 +78,69 @@ async function CreateMenu(call, callback) {
   }
 }
 
+async function UpdateMenu(call, callback) {
+  console.log("UpdateMenu callback running");
+  const newmenu = call.request;
+  const menuId = newmenu.id;
+  if (!menuId) {
+    return callback({
+      code: grpc.status.INVALID_ARGUMENT,
+      details: "Menu ID is required for updating",
+    });
+  }
+  if (!newmenu.name || !newmenu.price) {
+    return callback({
+      code: grpc.status.INVALID_ARGUMENT,
+      details: "Menu name and price are required",
+    });
+  }
+
+  try {
+    filter = { _id: menuId };
+    update = { name: newmenu.name, price: newmenu.price };
+    const doc = await Menu.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: "Failed to update the menu",
+    });
+  }
+}
+async function DeleteMenu(call, callback) {
+  console.log("DeleteMenu callback running");
+  const menuId = call.request.id;
+  if (!menuId) {
+    return callback({
+      code: grpc.status.INVALID_ARGUMENT,
+      details: "Menu ID is required for deleting",
+    });
+  }
+
+  try {
+    const menu = await Menu.findByIdAndDelete(menuId);
+    if (!menu) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Menu not found",
+      });
+    }
+    callback(null, {});
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: "Failed to delete the menu",
+    });
+  }
+}
 // ... other RPC method implementations
 
 module.exports = {
   GetMenus,
   GetMenu,
   CreateMenu,
+  UpdateMenu,
+  DeleteMenu,
   // ... other exports
 };
