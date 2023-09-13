@@ -1,8 +1,8 @@
 /* Headers */
 
-const PROTO_PATH = "../restaurant_proto.proto";
+const PROTO_PATH = "../proto/restaurant.proto";
 
-const grpc = require("grpc");
+const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const pkgDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -28,15 +28,18 @@ server.addService(
 );
 
 const dotenv = require("dotenv");
-dotenv.config({ path: "../config.env" });
+const path = require("path");
+dotenv.config({ override: true, path: path.join(__dirname, "../config.env") });
 
 // starting a server
 const server_URL = process.env.SERVER_URL || "localhost";
-const port = process.env.PORT || 50051;
+const port = process.env.GRPC_SERVER_PORT || 6969;
 
 server.bindAsync(
   `${server_URL}:${port}`,
-  grpc.ServerCredentials.createInsecure()
+  grpc.ServerCredentials.createInsecure(),
+  () => {
+    server.start();
+  }
 );
-console.log(`Server running at ${server_URL}:${port}`);
-server.start();
+console.log(`\n----------------\ngRPC Server running at ${server_URL}:${port}`);
