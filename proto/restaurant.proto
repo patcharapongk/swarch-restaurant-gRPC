@@ -1,14 +1,14 @@
 syntax = "proto3";
+// Using google.protobuf.Empty
+import "google/protobuf/empty.proto";
 
 service RestaurantService {
-    rpc GetMenus(void) returns (stream MenuItem);
+    rpc GetMenus(google.protobuf.Empty) returns ( MenuList);
     rpc GetMenu(MenuId) returns (MenuItem);
     rpc CreateMenu(MenuItem) returns (MenuItem);
     rpc UpdateMenu(MenuItem) returns (MenuItem);
-    rpc DeleteMenu(MenuId) returns ();
+    rpc DeleteMenu(MenuId) returns (google.protobuf.Empty);
 }
-
-message void {}
 
 message MenuId {
     string id = 1; 
@@ -18,4 +18,8 @@ message MenuItem {
     string id = 1;
     string name = 2;
     double price = 3;
+}
+
+message MenuList {
+    repeated MenuItem menus = 1;
 }
