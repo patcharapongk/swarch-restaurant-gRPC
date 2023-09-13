@@ -46,10 +46,43 @@ async function GetMenu(call, callback) {
   }
 }
 
+async function CreateMenu(call, callback) {
+  console.log("CreateMenu callback running");
+  const menu = call.request;
+  console.log("menu: ", menu);
+  if (!menu.name || !menu.price) {
+    return callback({
+      code: grpc.status.INVALID_ARGUMENT,
+      details: "Menu name and price are required",
+    });
+  }
+
+  try {
+    const newMenu = new Menu({
+      name: menu.name,
+      price: menu.price,
+    });
+    const savedMenu = await newMenu.save();
+    console.log("savedMenu: ", savedMenu);
+    const menuObject = {
+      id: savedMenu._id.toString(),
+      name: savedMenu.name,
+      price: savedMenu.price,
+    };
+    callback(null, menuObject);
+  } catch (err) {
+    callback({
+      code: grpc.status.INTERNAL,
+      details: "Failed to create the menu",
+    });
+  }
+}
+
 // ... other RPC method implementations
 
 module.exports = {
   GetMenus,
   GetMenu,
+  CreateMenu,
   // ... other exports
 };
