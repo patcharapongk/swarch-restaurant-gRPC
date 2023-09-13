@@ -8,6 +8,9 @@ dotenv.config({ path: path.join(__dirname, "../../config.env") });
 const express = require("express");
 const app = express();
 
+const cors = require("cors");
+app.use(cors());
+
 const bodyparser = require("body-parser");
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
