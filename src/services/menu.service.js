@@ -4,13 +4,7 @@ const Menu = require("../models/menu.model");
 async function GetMenus(call, callback) {
   try {
     const menus = await Menu.find();
-    const menuStream = [];
-    menus.forEach((menu) => {
-      menuStream.push(menu);
-    });
-    console.log({ menuStream });
-    const response = { menus: menuStream };
-    callback(null, response);
+    callback(null, { menus: menus });
   } catch (err) {
     const error = new Error("Failed to fetch menus");
     error.code = grpc.status.INTERNAL;
