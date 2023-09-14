@@ -14,7 +14,6 @@ async function GetMenus(call, callback) {
 
 async function GetMenu(call, callback) {
   console.log("GetMenu callback running");
-  console.log("call: ", call);
   const menuId = call.request.id;
   if (!menuId) {
     return callback({
@@ -49,7 +48,6 @@ async function GetMenu(call, callback) {
 async function CreateMenu(call, callback) {
   console.log("CreateMenu callback running");
   const menu = call.request;
-  console.log("menu: ", menu);
   if (!menu.name || !menu.price) {
     return callback({
       code: grpc.status.INVALID_ARGUMENT,
@@ -63,7 +61,6 @@ async function CreateMenu(call, callback) {
       price: menu.price,
     });
     const savedMenu = await newMenu.save();
-    console.log("savedMenu: ", savedMenu);
     const menuObject = {
       id: savedMenu._id.toString(),
       name: savedMenu.name,
@@ -81,7 +78,6 @@ async function CreateMenu(call, callback) {
 async function UpdateMenu(call, callback) {
   console.log("UpdateMenu callback running");
   const newmenu = call.request;
-  console.log("newmenu: ", newmenu);
   const menuId = call.request.id;
   if (!menuId) {
     return callback({
